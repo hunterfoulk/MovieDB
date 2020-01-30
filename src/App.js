@@ -1,26 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import { useStateValue } from "./State";
+import Header from "./components/Header";
+import Search from "./components/Search";
+import axios from "axios";
+/* import loader from "./assets/Ajax-Preloader.gif"; */
 
-function App() {
+export default function App() {
+  const [{ movies }, dispatch] = useStateValue();
+
+  useEffect(() => {
+    axios
+      .get(`https://www.omdbapi.com/?s=man&apikey=7305ce7b`)
+      .then(jsonResponse => {
+        dispatch({
+          type: "Movies",
+          movies: jsonResponse.data.Search
+        });
+      });
+  }, []);
+
+  const search = searchValue => {
+    axios(`https://www.omdbapi.com/?s=${searchValue}&apikey=7305ce7b`).then(
+      jsonResponse => {
+        if (jsonResponse.data.Response === "True") {
+          dispatch({
+            type: "Movies",
+            movies: jsonResponse.data.Search
+          });
+        }
+      }
+    );
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header />
+
+      <Search search={search} />
+
+      <div className="app-container">
+        {movies.map(movie => (
+          <li>
+            <li>{movie.Title}</li>
+            <img className="movie-posters" src={movie.Poster} alt="/"></img>
+          </li>
+        ))}
+      </div>
+    </>
   );
 }
-
-export default App;

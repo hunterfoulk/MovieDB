@@ -1,12 +1,45 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import { StateProvider } from "./State";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+function Index() {
+  let initialState = {
+    movies: []
+  };
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "Movies":
+        return {
+          ...state,
+          movies: action.movies
+        };
+        break;
+      case "searched":
+        return {
+          ...state,
+          loading: false,
+          error: null
+        };
+        break;
+      case "error":
+        return {
+          ...state,
+          loading: false,
+          error: action.error
+        };
+      default:
+        return state;
+    }
+  };
+
+  return (
+    <StateProvider initialState={initialState} reducer={reducer}>
+      <App />
+    </StateProvider>
+  );
+}
+
+ReactDOM.render(<Index />, document.getElementById("root"));
