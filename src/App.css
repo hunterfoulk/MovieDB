@@ -22,6 +22,12 @@
   background: teal;
 }
 .movie-posters {
-  /*   height: 435px;
-  width: 280px; */
+  cursor: pointer;
+}
+.movie-modal {
+  width: 800px;
+  height: 600px;
+  background: rgb(170, 90, 90);
+  position: fixed;
+  display: flex;
 }

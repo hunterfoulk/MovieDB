@@ -17,19 +17,6 @@ function Index() {
           movies: action.movies
         };
         break;
-      case "searched":
-        return {
-          ...state,
-          loading: false,
-          error: null
-        };
-        break;
-      case "error":
-        return {
-          ...state,
-          loading: false,
-          error: action.error
-        };
       default:
         return state;
     }

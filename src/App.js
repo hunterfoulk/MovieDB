@@ -4,10 +4,119 @@ import { useStateValue } from "./State";
 import Header from "./components/Header";
 import Search from "./components/Search";
 import axios from "axios";
-/* import loader from "./assets/Ajax-Preloader.gif"; */
+import { Modal, Col, Card, Row, Tag, Typography } from "antd";
+import "antd/dist/antd.css";
+const { Meta } = Card;
+const TextTitle = Typography.Title;
 
-export default function App() {
+//Card
+const ColCardBox = ({
+  Title,
+  imdbID,
+  Poster,
+  Type,
+  ShowDetail,
+  DetailRequest,
+  modalOpen
+}) => {
+  const HandleClick = () => {
+    // Display Modal and Loading Icon
+    modalOpen(true);
+    DetailRequest(true);
+
+    fetch(`http://www.omdbapi.com/?i=${imdbID}&apikey=7305ce7b`)
+      .then(resp => resp)
+      .then(resp => resp.json())
+      .then(response => {
+        DetailRequest(false);
+        ShowDetail(response);
+      });
+  };
+
+  return (
+    <Col style={{ margin: "50px 0" }} className="gutter-row" span={4}>
+      <div className="gutter-box">
+        <Card
+          style={{ width: 250 }}
+          cover={
+            <img
+              className="movie-posters"
+              alt={Title}
+              src={
+                Poster === "N/A"
+                  ? "https://placehold.it/198x264&text=Image+Not+Found"
+                  : Poster
+              }
+            />
+          }
+          onClick={() => HandleClick()}
+        >
+          <Meta title={Title} description={false} />
+          <Row style={{ marginTop: "10px" }} className="gutter-row">
+            <Col>
+              <Tag color="magenta">{Type}</Tag>
+            </Col>
+          </Row>
+        </Card>
+      </div>
+    </Col>
+  );
+};
+
+//Modal component
+
+const MovieDetail = ({
+  Title,
+  Poster,
+  imdbRating,
+  Rated,
+  Runtime,
+  Genre,
+  Plot
+}) => {
+  return (
+    <Row>
+      <Col span={11}>
+        <img
+          src={
+            Poster === "N/A"
+              ? "https://placehold.it/198x264&text=Image+Not+Found"
+              : Poster
+          }
+          alt={Title}
+        />
+      </Col>
+      <Col span={13}>
+        <Row>
+          <Col span={21}>
+            <TextTitle level={4}>{Title}</TextTitle>
+          </Col>
+          <Col span={3} style={{ textAlign: "right" }}>
+            <TextTitle level={4}>
+              <span style={{ color: "#41A8F8" }}>{imdbRating}</span>
+            </TextTitle>
+          </Col>
+        </Row>
+        <Row style={{ marginBottom: "20px" }}>
+          <Col>
+            <Tag>{Rated}</Tag>
+            <Tag>{Runtime}</Tag>
+            <Tag>{Genre}</Tag>
+          </Col>
+        </Row>
+        <Row>
+          <Col>{Plot}</Col>
+        </Row>
+      </Col>
+    </Row>
+  );
+};
+
+function App() {
   const [{ movies }, dispatch] = useStateValue();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [details, setShowDetails] = useState(false);
+  const [detailRequest, setDetailRequest] = useState(false);
 
   useEffect(() => {
     axios
@@ -39,14 +148,29 @@ export default function App() {
 
       <Search search={search} />
 
-      <div className="app-container">
-        {movies.map(movie => (
-          <li>
-            <li>{movie.Title}</li>
-            <img className="movie-posters" src={movie.Poster} alt="/"></img>
-          </li>
+      {movies !== null &&
+        movies.length > 0 &&
+        movies.map((result, index) => (
+          <ColCardBox
+            ShowDetail={setShowDetails}
+            DetailRequest={setDetailRequest}
+            modalOpen={setModalOpen}
+            key={index}
+            {...result}
+          />
         ))}
-      </div>
+
+      <Modal
+        title="Detail"
+        centered
+        visible={modalOpen}
+        onCancel={() => setModalOpen(false)}
+        footer={null}
+        width={800}
+      >
+        {detailRequest === false ? <MovieDetail {...details} /> : null}
+      </Modal>
     </>
   );
 }
+export default App;
