@@ -1,0 +1,28 @@
+.flexbox {
+  display: flex;
+  justify-content: center;
+
+  margin-top: 25px;
+}
+
+.inputbox {
+  width: 600px;
+  height: 41px;
+  font-size: 20px;
+  padding: 10px;
+  border: 1px solid lightgrey;
+}
+.searchbutton {
+  cursor: pointer;
+  position: relative;
+  bottom: 2px;
+  font-size: 15px;
+  background: #1890ff;
+  border-color: #1890ff;
+  border-radius: 5px;
+  border: 1px solid;
+  color: white;
+  padding: 5px;
+  width: 90px;
+  height: 45px;
+}

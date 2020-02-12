@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import "./Search.css";
 const Search = ({ search }) => {
   const [searchValue, setSearchValue] = useState("");
 
@@ -14,11 +14,24 @@ const Search = ({ search }) => {
   };
 
   return (
-    <form className="search">
-      <input value={searchValue} onChange={handleSearchValue} type="text" />
+    <div className="flexbox">
+      <form className="searchbox">
+        <input
+          placeholder="search your movie!"
+          className="inputbox"
+          value={searchValue}
+          onChange={handleSearchValue}
+          type="text"
+        />
 
-      <input onClick={callSearchValue} type="submit" value="SEARCH" />
-    </form>
+        <input
+          className="searchbutton"
+          onClick={callSearchValue}
+          type="submit"
+          value="Search"
+        />
+      </form>
+    </div>
   );
 };
 

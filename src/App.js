@@ -4,13 +4,13 @@ import { useStateValue } from "./State";
 import Header from "./components/Header";
 import Search from "./components/Search";
 import axios from "axios";
-import { Modal, Col, Card, Row, Tag, Typography } from "antd";
+import { Modal, Col, Card, Row, Tag, Typography, Button } from "antd";
 import "antd/dist/antd.css";
 const { Meta } = Card;
 const TextTitle = Typography.Title;
 
-//Card
-const ColCardBox = ({
+//display cards
+const MovieBoxes = ({
   Title,
   imdbID,
   Poster,
@@ -20,7 +20,7 @@ const ColCardBox = ({
   modalOpen
 }) => {
   const HandleClick = () => {
-    // Display Modal and Loading Icon
+    // Display Modal & get specific movie ID
     modalOpen(true);
     DetailRequest(true);
 
@@ -34,10 +34,10 @@ const ColCardBox = ({
   };
 
   return (
-    <Col style={{ margin: "50px 0" }} className="gutter-row" span={4}>
+    <Col style={{ margin: "30px 0" }} className="gutter-row" span={4}>
       <div className="gutter-box">
         <Card
-          style={{ width: 250 }}
+          style={{ height: 530, width: 270 }}
           cover={
             <img
               className="movie-posters"
@@ -49,21 +49,27 @@ const ColCardBox = ({
               }
             />
           }
-          onClick={() => HandleClick()}
         >
-          <Meta title={Title} description={false} />
+          <Meta title={Title} />
           <Row style={{ marginTop: "10px" }} className="gutter-row">
             <Col>
-              <Tag color="magenta">{Type}</Tag>
+              <Tag color="red">{Type}</Tag>
             </Col>
+            <Button style={{ marginTop: "10px" }} type="primary">
+              Watch Now
+            </Button>
+            <Button
+              onClick={() => HandleClick()}
+              style={{ bottom: 32, marginLeft: "120px" }}
+            >
+              View Details
+            </Button>
           </Row>
         </Card>
       </div>
     </Col>
   );
 };
-
-//Modal component
 
 const MovieDetail = ({
   Title,
@@ -89,7 +95,7 @@ const MovieDetail = ({
       <Col span={13}>
         <Row>
           <Col span={21}>
-            <TextTitle level={4}>{Title}</TextTitle>
+            <TextTitle level={7}>{Title}</TextTitle>
           </Col>
           <Col span={3} style={{ textAlign: "right" }}>
             <TextTitle level={4}>
@@ -145,31 +151,32 @@ function App() {
   return (
     <>
       <Header />
+      <div className="containerapp">
+        <Search search={search} />
 
-      <Search search={search} />
+        {movies !== null &&
+          movies.length > 0 &&
+          movies.map((result, index) => (
+            <MovieBoxes
+              ShowDetail={setShowDetails}
+              DetailRequest={setDetailRequest}
+              modalOpen={setModalOpen}
+              key={index}
+              {...result}
+            />
+          ))}
 
-      {movies !== null &&
-        movies.length > 0 &&
-        movies.map((result, index) => (
-          <ColCardBox
-            ShowDetail={setShowDetails}
-            DetailRequest={setDetailRequest}
-            modalOpen={setModalOpen}
-            key={index}
-            {...result}
-          />
-        ))}
-
-      <Modal
-        title="Detail"
-        centered
-        visible={modalOpen}
-        onCancel={() => setModalOpen(false)}
-        footer={null}
-        width={800}
-      >
-        {detailRequest === false ? <MovieDetail {...details} /> : null}
-      </Modal>
+        <Modal
+          title="Movie Details!"
+          centered
+          visible={modalOpen}
+          onCancel={() => setModalOpen(false)}
+          footer={null}
+          width={800}
+        >
+          {detailRequest === false ? <MovieDetail {...details} /> : null}
+        </Modal>
+      </div>
     </>
   );
 }
