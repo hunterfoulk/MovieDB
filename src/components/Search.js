@@ -17,7 +17,7 @@ const Search = ({ search }) => {
     <div className="flexbox">
       <form className="searchbox">
         <input
-          placeholder="search your movie!"
+          placeholder="search a movie!"
           className="inputbox"
           value={searchValue}
           onChange={handleSearchValue}

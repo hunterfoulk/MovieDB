@@ -34,7 +34,11 @@ const MovieBoxes = ({
   };
 
   return (
-    <Col style={{ margin: "30px 0" }} className="gutter-row" span={4}>
+    <Col
+      style={{ margin: "30px", padding: "30px" }}
+      className="gutter-row"
+      span={4}
+    >
       <div className="gutter-box">
         <Card
           style={{ height: 530, width: 270 }}
