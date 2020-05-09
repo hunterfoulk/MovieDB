@@ -17,17 +17,17 @@ const MovieBoxes = ({
   Type,
   ShowDetail,
   DetailRequest,
-  modalOpen
+  modalOpen,
 }) => {
   const HandleClick = () => {
     // Display Modal & get specific movie ID
     modalOpen(true);
     DetailRequest(true);
 
-    fetch(`http://www.omdbapi.com/?i=${imdbID}&apikey=7305ce7b`)
-      .then(resp => resp)
-      .then(resp => resp.json())
-      .then(response => {
+    fetch(`https://www.omdbapi.com/?i=${imdbID}&apikey=7305ce7b`)
+      .then((resp) => resp)
+      .then((resp) => resp.json())
+      .then((response) => {
         DetailRequest(false);
         ShowDetail(response);
       });
@@ -82,7 +82,7 @@ const MovieDetail = ({
   Rated,
   Runtime,
   Genre,
-  Plot
+  Plot,
 }) => {
   return (
     <Row>
@@ -131,21 +131,21 @@ function App() {
   useEffect(() => {
     axios
       .get(`https://www.omdbapi.com/?s=man&apikey=7305ce7b`)
-      .then(jsonResponse => {
+      .then((jsonResponse) => {
         dispatch({
           type: "Movies",
-          movies: jsonResponse.data.Search
+          movies: jsonResponse.data.Search,
         });
       });
   }, []);
 
-  const search = searchValue => {
+  const search = (searchValue) => {
     axios(`https://www.omdbapi.com/?s=${searchValue}&apikey=7305ce7b`).then(
-      jsonResponse => {
+      (jsonResponse) => {
         if (jsonResponse.data.Response === "True") {
           dispatch({
             type: "Movies",
-            movies: jsonResponse.data.Search
+            movies: jsonResponse.data.Search,
           });
         }
       }
